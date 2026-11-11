@@ -1,17 +1,16 @@
 @startuml
-title Fluxo conceitual — Atividade7-EdN
-actor Usuario
-component "Entrada" as Entrada
-component "Validador" as Validador
-component "Roteiro / Exercício" as Roteiro
-component "Ambiente externo" as Externo
-Usuario --> Entrada
-Entrada --> Validador
-Validador --> Roteiro
-Roteiro --> Externo : se aplicavel
-Roteiro --> Usuario : resultado
-note right of Roteiro
-Diagrama conceitual.
-Nao declara classes existentes.
+title Atividade7-EdN: componentes e artefatos
+actor "Executor de testes" as E
+component "1/analise_logs.py" as M0
+E --> M0
+component "2/escrever_csv.py" as M1
+E --> M1
+component "3/ler_csv.py" as M2
+E --> M2
+component "4/manipular_json.py" as M3
+E --> M3
+note bottom
+Visão por artefato: não presume backend ou classes
+que não aparecem na árvore do código.
 end note
 @enduml
