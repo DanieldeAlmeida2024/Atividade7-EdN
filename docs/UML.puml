@@ -1,17 +1,29 @@
 @startuml
-title Fluxo conceitual — Atividade7-EdN
-actor Usuario
-component "Entrada" as Entrada
-component "Validador" as Validador
-component "Roteiro / Exercício" as Roteiro
-component "Ambiente externo" as Externo
-Usuario --> Entrada
-Entrada --> Validador
-Validador --> Roteiro
-Roteiro --> Externo : se aplicavel
-Roteiro --> Usuario : resultado
-note right of Roteiro
-Diagrama conceitual.
-Nao declara classes existentes.
+title Atividade 07 — responsabilidades dos scripts
+skinparam componentStyle rectangle
+actor "Usuário CLI" as user
+component "analise_logs.py" as logs
+component "escrever_csv.py" as writer
+component "ler_csv.py" as reader
+component "manipular_json.py" as json
+database "Log UTF-8 (opcional)" as log
+file "pessoas.csv" as csv
+file "pessoa.json" as datajson
+user --> logs : --arquivo
+user --> writer : --arquivo
+user --> reader : --arquivo
+user --> json : --arquivo
+logs ..> log : read_text()
+writer --> csv : DictWriter
+reader <-- csv : DictReader
+json --> datajson : dump()
+json <-- datajson : load()
+note right of logs
+  mean + stdev amostral
+  1 época: desvio = 0
+end note
+note right of reader
+  validar esquema:
+  Nome, Idade, Cidade
 end note
 @enduml
