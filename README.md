@@ -1,34 +1,51 @@
-# Atividade7-EdN
+# Atividade 07 — Logs de treinamento, CSV e JSON
 
-Exercícios de Python para análise de logs e arquivos CSV e JSON.
-
-## Tecnologias
-Python 3, csv, json, statistics.
+Quatro exercícios de Python voltados a arquivos e análise de dados. Os exemplos usam dados fictícios e apenas a biblioteca padrão.
 
 ## Executar
+
+Com **Python 3.10+**, a partir da raiz do projeto:
+
 ```bash
-python <arquivo_da_atividade>.py
+python 1/analise_logs.py
+python 2/escrever_csv.py
+python 3/ler_csv.py
+python 4/manipular_json.py
 ```
 
-**Pré-condições:** As entradas de arquivo dependem dos exemplos de cada exercício.
+O segundo comando cria ou substitui `dados_pessoais.csv`; o quarto cria ou substitui `dados_pessoa.json`. Os caminhos padrão são relativos à **raiz do repositório**, não à pasta de onde o comando foi executado.
 
-## Documentos
-- [Requisitos](docs/REQUISITOS.md)
-- [Arquitetura](docs/ARQUITETURA.md)
-- [UML](docs/UML.puml)
-- [Testes](docs/PLANO_TESTES.md)
-- [Instruções para IA](AGENTS.md)
+Para trabalhar em uma pasta de testes, sem sobrescrever os exemplos:
 
-## README original preservado
+```bash
+python 1/analise_logs.py --arquivo ./treinamento.log
+python 2/escrever_csv.py --arquivo ./tmp/pessoas.csv
+python 3/ler_csv.py --arquivo ./tmp/pessoas.csv
+python 4/manipular_json.py --arquivo ./tmp/pessoa.json
+```
 
-## Atividade Prática 07
-  O enunciado das atividades estão nos slides da Aula 11.
+## O que cada exercício demonstra
 
-1. Leia um arquivo que contenha dados de log de treinamento de modelos de Machine Learning. Calcule a média e o desvio padrão do tempo de
-exercução constantes.
+| Script | Responsabilidade | Tratamento |
+| --- | --- | --- |
+| `1/analise_logs.py` | Extrai tempos `Execution Time: Xs`, calcula média e desvio-padrão **amostral** | Um único tempo retorna desvio 0; ausência de tempos é erro explícito |
+| `2/escrever_csv.py` | Escreve nomes fictícios, idades e cidades em CSV UTF-8 | Cria diretório destino e preserva acentos |
+| `3/ler_csv.py` | Lê CSV com `Nome,Idade,Cidade` | Rejeita cabeçalhos inesperados, idades inválidas e linhas incompletas |
+| `4/manipular_json.py` | Grava e relê JSON de uma pessoa fictícia | Valida estrutura, tipos, idade e Unicode |
 
-2. Crie um script em Python que escreva dados em um arquivo CSV. O arquivo CSV deve conter informações pessoais, como colunas Nome, Idade e Cidade.
+## Testes reais
 
-3. Crie um script en Python que leia um arquivo CSV e exiba os dados na tela. O arquivo CSV deve conter informações de pessoas, com colunas Nome, Idade e Cidade.
+```bash
+python -m unittest discover -s tests -p 'test_*.py' -v
+```
 
-4. Crie um script em Python que leia e escreva dados em um arquivo JSON. O arquivo JSON deve conter informações de uma pessoa, com campos nome, idade e cidade.
+Os testes incluem roundtrip CSV/JSON, arquivos malformados, estatísticas com uma ou várias épocas e execução dos scripts a partir de outro diretório. O GitHub Actions roda essa suíte em PRs e na `main`.
+
+**Limites:** exercícios de arquivo local, sem autenticação, dados reais, armazenamento criptografado ou serviço HTTP. O desvio é amostral (`statistics.stdev`), não populacional.
+
+## Documentação
+
+- [Arquitetura e responsabilidades](docs/ARQUITETURA.md)
+- [Modelo UML](docs/UML.puml)
+- [Plano de testes e critérios](docs/PLANO_TESTES.md)
+- [Enunciados e requisitos](docs/REQUISITOS.md)
