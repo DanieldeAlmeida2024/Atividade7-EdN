@@ -1,6 +1,7 @@
 """Escrita de dados fictícios em CSV; caminho independente do cwd."""
 import argparse
 import csv
+import tempfile
 from pathlib import Path
 
 ARQUIVO_PADRAO = Path(__file__).resolve().parents[1] / "dados_pessoais.csv"
@@ -14,11 +15,21 @@ AMOSTRA = [
 def escrever_csv(destino: Path, pessoas=AMOSTRA) -> int:
     destino = Path(destino)
     destino.parent.mkdir(parents=True, exist_ok=True)
-    with destino.open("w", newline="", encoding="utf-8") as arquivo:
-        escritor = csv.DictWriter(arquivo, fieldnames=CABECALHOS)
-        escritor.writeheader()
-        escritor.writerows(pessoas)
-    return len(pessoas)
+    # Escrita transacional: dados inválidos não truncam um CSV existente.
+    temporario = None
+    try:
+        with tempfile.NamedTemporaryFile("w", newline="", encoding="utf-8",
+                                         dir=destino.parent, prefix=f".{destino.name}.",
+                                         suffix=".tmp", delete=False) as arquivo:
+            temporario = Path(arquivo.name)
+            escritor = csv.DictWriter(arquivo, fieldnames=CABECALHOS)
+            escritor.writeheader()
+            escritor.writerows(pessoas)
+        temporario.replace(destino)
+        return len(pessoas)
+    finally:
+        if temporario is not None:
+            temporario.unlink(missing_ok=True)
 
 def main():
     parser = argparse.ArgumentParser(description="Escrever exemplo CSV.")
