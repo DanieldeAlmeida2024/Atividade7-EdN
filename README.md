@@ -49,3 +49,9 @@ Os testes incluem roundtrip CSV/JSON, arquivos malformados, estatísticas com um
 - [Modelo UML](docs/UML.puml)
 - [Plano de testes e critérios](docs/PLANO_TESTES.md)
 - [Enunciados e requisitos](docs/REQUISITOS.md)
+
+## Documentação de estudo e apresentação
+
+[Especificação própria](docs/projeto/ESPECIFICACAO.md) · [Diagramas UML](docs/uml/README.md) · [Matriz histórica de testes](docs/testes/PLANO_DE_TESTES.md).
+
+A modelagem original foi mantida como referência; os testes atuais e os limites de execução são documentados em [Plano de testes vigente](docs/PLANO_TESTES.md) e nas execuções de CI. Não atribuir aprovação de testes a casos apenas planejados.
