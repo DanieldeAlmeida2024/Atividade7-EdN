@@ -11,3 +11,7 @@
 | [Testes](../testes/PLANO_DE_TESTES.md) | Atividade7-EdN-TST | 1.0.0 |
 
 MAJOR para quebra de contrato, MINOR para novas funcionalidades/casos, PATCH para edição. Para cada revisão, anexar o SHA, ambiente e evidências de testes por cenário.
+
+## Reconciliação documental de 14/11/2026
+
+Especificações e UML históricas migradas para a `main` atual com aviso de escopo, sem substituir testes, arquitetura ou código posteriores. O CI vigente continua sendo a fonte de evidência funcional.
