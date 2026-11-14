@@ -1,0 +1,13 @@
+@startuml
+title Atividade7-EdN: fluxo crítico
+start
+:Executar 2/escrever_csv.py;
+:Criar ../dados_pessoais.csv;
+:Executar 3/ler_csv.py;
+if (CSV existe?) then (sim)
+:Ler DictReader e imprimir linhas;
+else (não)
+:Orientar executar escritor primeiro;
+endif
+stop
+@enduml
