@@ -1,32 +1,42 @@
+"""Leitura e validação das colunas do exemplo CSV."""
+import argparse
 import csv
-import os
+from pathlib import Path
 
-nome_arquivo = '../dados_pessoais.csv'
+ARQUIVO_PADRAO = Path(__file__).resolve().parents[1] / "dados_pessoais.csv"
+CABECALHOS = ("Nome", "Idade", "Cidade")
 
-print("-" * 50)
-print(f"Lendo dados do arquivo CSV: '{nome_arquivo}'")
-print("-" * 50)
+def ler_csv(origem: Path) -> list[dict]:
+    origem = Path(origem)
+    with origem.open("r", newline="", encoding="utf-8-sig") as arquivo:
+        leitor = csv.DictReader(arquivo)
+        if leitor.fieldnames != list(CABECALHOS):
+            raise ValueError("CSV deve ter as colunas: Nome,Idade,Cidade")
+        resultado = []
+        for numero, linha in enumerate(leitor, start=2):
+            try:
+                idade = int(linha["Idade"])
+                if not 0 <= idade <= 130:
+                    raise ValueError()
+                nome, cidade = linha["Nome"].strip(), linha["Cidade"].strip()
+                if not nome or not cidade:
+                    raise ValueError()
+            except (ValueError, TypeError, KeyError, AttributeError) as erro:
+                raise ValueError(f"Linha {numero}: pessoa inválida.") from erro
+            resultado.append({"Nome": nome, "Idade": idade, "Cidade": cidade})
+        return resultado
 
-if not os.path.exists(nome_arquivo):
-    print(f"Erro: O arquivo '{nome_arquivo}' não foi encontrado.")
-    print("Execute o script 'escrever_csv.py' primeiro para criar o arquivo.")
-else:
+def main():
+    parser = argparse.ArgumentParser(description="Ler exemplo CSV.")
+    parser.add_argument("--arquivo", type=Path, default=ARQUIVO_PADRAO)
+    args = parser.parse_args()
     try:
-        with open(nome_arquivo, mode='r', newline='', encoding='utf-8') as arquivo_csv:
-            leitor_csv = csv.DictReader(arquivo_csv)
+        pessoas = ler_csv(args.arquivo)
+    except (OSError, ValueError) as erro:
+        parser.error(str(erro))
+    for indice, pessoa in enumerate(pessoas, start=1):
+        print(f"{indice}. {pessoa['Nome']} — {pessoa['Idade']} anos — {pessoa['Cidade']}")
+    print(f"Registros lidos: {len(pessoas)}")
 
-            cabecalhos = leitor_csv.fieldnames
-            print(f"Cabeçalhos: {cabecalhos}")
-            print("-" * 50)
-
-            for i, linha in enumerate(leitor_csv):
-                print(f"Registro {i+1}:")
-                print(f"  Nome: {linha['Nome']}")
-                print(f"  Idade: {linha['Idade']}")
-                print(f"  Cidade: {linha['Cidade']}")
-                print("-" * 50)
-
-            print("Leitura do arquivo CSV concluída com sucesso.")
-
-    except Exception as e:
-        print(f"Ocorreu um erro ao ler o arquivo CSV: {e}")
+if __name__ == "__main__":
+    main()
