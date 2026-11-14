@@ -37,6 +37,26 @@ class TestesAtividade07(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Nenhum tempo"):
             logs.analisar_tempos("modelo iniciou mas não executou")
 
+    def test_log_rejeita_tempo_negativo_e_nao_finito(self):
+        for texto in ("Execution Time: -1.0s", "Execution Time: " + "9" * 400 + "s"):
+            with self.subTest(texto=texto[:40]):
+                with self.assertRaisesRegex(ValueError, "negativo ou não finito"):
+                    logs.analisar_tempos(texto)
+        self.assertEqual(0.0, logs.analisar_tempos("Execution Time: 0s")["media"])
+
+    def test_csv_falha_de_escrita_nao_apaga_arquivo_existente(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            arquivo = pathlib.Path(pasta) / "pessoas.csv"
+            conteudo_antigo = "Nome,Idade,Cidade\nRegistro antigo,30,Goiânia\n"
+            arquivo.write_text(conteudo_antigo, encoding="utf-8")
+            with self.assertRaises(ValueError):
+                csv_writer.escrever_csv(arquivo, [
+                    {"Nome": "Ana", "Idade": 25, "Cidade": "SP"},
+                    {"Nome": "Bruno", "Idade": 25, "Cidade": "RJ", "Chave": "inesperada"},
+                ])
+            self.assertEqual(conteudo_antigo, arquivo.read_text(encoding="utf-8"))
+            self.assertEqual([], list(pathlib.Path(pasta).glob("*.tmp")))
+
     def test_csv_roundtrip_preserva_acentos(self):
         with tempfile.TemporaryDirectory() as pasta:
             arquivo = pathlib.Path(pasta) / "sub" / "pessoas.csv"

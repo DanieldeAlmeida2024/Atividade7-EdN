@@ -1,16 +1,19 @@
 """Análise de tempo de execução de treinamento em logs."""
 import argparse
 import re
+import math
 import statistics
 from pathlib import Path
 
 AMOSTRA_LOG = "\n[INFO] Inicializando o treinamento do Modelo X...\n[ETAPA 1] Pré-processamento concluído em 5.2s.\n[TREINO] Época 1/10. Loss: 0.85. Execution Time: 12.3s\n[TREINO] Época 2/10. Loss: 0.71. Execution Time: 13.5s\n[TREINO] Época 3/10. Loss: 0.62. Execution Time: 14.1s\n[TREINO] Época 4/10. Loss: 0.55. Execution Time: 12.9s\n[TREINO] Época 5/10. Loss: 0.48. Execution Time: 15.0s\n[TREINO] Época 6/10. Loss: 0.41. Execution Time: 13.2s\n[TREINO] Época 7/10. Loss: 0.35. Execution Time: 14.8s\n[TREINO] Época 8/10. Loss: 0.29. Execution Time: 12.7s\n[TREINO] Época 9/10. Loss: 0.24. Execution Time: 15.5s\n[TREINO] Época 10/10. Loss: 0.19. Execution Time: 14.0s\n[INFO] Treinamento concluído.\n"
-PADRAO_TEMPO = re.compile(r"Execution Time:\s*(\d+(?:\.\d+)?)s\b")
+PADRAO_TEMPO = re.compile(r"Execution Time:\s*(-?\d+(?:\.\d+)?)s\b")
 
 def analisar_tempos(conteudo: str) -> dict:
     if not isinstance(conteudo, str):
         raise TypeError("O log deve ser texto.")
     tempos = [float(tempo) for tempo in PADRAO_TEMPO.findall(conteudo)]
+    if any(not math.isfinite(tempo) or tempo < 0 for tempo in tempos):
+        raise ValueError("Tempo de execução negativo ou não finito no log.")
     if not tempos:
         raise ValueError("Nenhum tempo de execução encontrado no log.")
     return {
