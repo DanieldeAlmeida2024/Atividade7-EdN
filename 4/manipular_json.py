@@ -1,6 +1,7 @@
 """Escrita e leitura de JSON de exemplo, com validação estrutural."""
 import argparse
 import json
+import tempfile
 from pathlib import Path
 
 ARQUIVO_PADRAO = Path(__file__).resolve().parents[1] / "dados_pessoa.json"
@@ -9,8 +10,18 @@ AMOSTRA = {"nome": "Ricardo Oliveira", "idade": 45, "cidade": "Porto Alegre"}
 def escrever_json(destino: Path, pessoa=AMOSTRA) -> None:
     destino = Path(destino)
     destino.parent.mkdir(parents=True, exist_ok=True)
-    with destino.open("w", encoding="utf-8") as arquivo:
-        json.dump(pessoa, arquivo, ensure_ascii=False, indent=2, allow_nan=False)
+    temporario = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w", encoding="utf-8", dir=destino.parent,
+            prefix=f".{destino.name}.", suffix=".tmp", delete=False,
+        ) as arquivo:
+            temporario = Path(arquivo.name)
+            json.dump(pessoa, arquivo, ensure_ascii=False, indent=2, allow_nan=False)
+        temporario.replace(destino)
+    finally:
+        if temporario is not None:
+            temporario.unlink(missing_ok=True)
 
 def ler_json(origem: Path) -> dict:
     with Path(origem).open("r", encoding="utf-8") as arquivo:
