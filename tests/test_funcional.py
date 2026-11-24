@@ -93,6 +93,28 @@ class TestesAtividade07(unittest.TestCase):
             self.assertIn("Goiânia", arquivo.read_text(encoding="utf-8"))
             self.assertEqual(pessoa, json_io.ler_json(arquivo))
 
+    def test_json_falha_de_serializacao_preserva_arquivo_existente(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            arquivo = pathlib.Path(pasta) / "pessoa.json"
+            anterior = {"nome": "João", "idade": 25, "cidade": "Goiânia"}
+            json_io.escrever_json(arquivo, anterior)
+            conteudo = arquivo.read_bytes()
+            for valor, erro in ((float("nan"), ValueError), (object(), TypeError)):
+                with self.subTest(erro=erro):
+                    with self.assertRaises(erro):
+                        json_io.escrever_json(arquivo, {**anterior, "idade": valor})
+                    self.assertEqual(conteudo, arquivo.read_bytes())
+                    self.assertEqual([arquivo], list(arquivo.parent.iterdir()))
+
+    def test_json_falha_de_substituicao_remove_temporario(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            destino = pathlib.Path(pasta) / "pessoa.json"
+            destino.mkdir()
+            with self.assertRaises(OSError):
+                json_io.escrever_json(destino)
+            self.assertTrue(destino.is_dir())
+            self.assertEqual([destino], list(destino.parent.iterdir()))
+
     def test_json_malformado_e_estrutura_invalida(self):
         with tempfile.TemporaryDirectory() as pasta:
             arquivo = pathlib.Path(pasta) / "pessoa.json"

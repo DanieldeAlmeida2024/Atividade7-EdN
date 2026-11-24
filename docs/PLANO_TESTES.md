@@ -1,6 +1,6 @@
 # Plano de testes — Atividade 07
 
-Versão 1.1.0 — 14/11/2026
+Versão 1.2.0 — 24/11/2026
 
 Comando: `python -m unittest discover -s tests -p 'test_*.py' -v`.
 
@@ -14,6 +14,8 @@ Comando: `python -m unittest discover -s tests -p 'test_*.py' -v`.
 | CSV-03 | Leitura | Idade negativa, texto, linha incompleta | Erro com número da linha |
 | JSON-01 | Escrita/leitura | Unicode, idade válida | Roundtrip preservado |
 | JSON-02 | Leitura | JSON malformado, faltam campos, idade booleana | Rejeitado |
+| JSON-03 | Escrita | Valor não serializável ou NaN no meio do objeto | Os bytes anteriores são preservados e o temporário é removido |
+| JSON-04 | Escrita | O destino é um diretório e a substituição falha | O diretório é preservado e o temporário é removido |
 | CLI-01 | CSV | Execução com cwd diferente da raiz | Arquivo escrito e lido no caminho solicitado |
 | CLI-02 | Logs | Log externo com 1.5s e 2.5s | Média exibida 2.00 |
 | CLI-03 | JSON | Caminho em diretório novo | Criação, leitura e UTF-8 válidos |
