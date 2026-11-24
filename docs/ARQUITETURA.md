@@ -1,13 +1,13 @@
 # Arquitetura — Atividade 07
 
-Versão 1.1.0 — 14/11/2026
+Versão 1.1.1 — 24/11/2026
 
 ## Componentes
 
 - **Análise de logs** (`1/analise_logs.py`): `analisar_tempos(texto)` extrai tempos positivos com regex, converte para `float`, calcula média e desvio amostral. `main()` recebe `--arquivo` ou usa a amostra.
 - **Escrita CSV** (`2/escrever_csv.py`): `escrever_csv(caminho, pessoas)` cria o diretório de saída e usa `csv.DictWriter`; amostra de três pessoas fictícias.
 - **Leitura CSV** (`3/ler_csv.py`): `ler_csv(caminho)` abre UTF-8 com ou sem BOM, valida cabeçalhos exatos e converte `Idade` para inteiro.
-- **JSON** (`4/manipular_json.py`): `escrever_json` grava objeto com `ensure_ascii=False`; `ler_json` carrega, valida tipos e intervalo etário.
+- **JSON** (`4/manipular_json.py`): `escrever_json` grava um temporário UTF-8 no diretório de destino. Fecha o temporário antes de substituir o destino e o limpa se houver falha. `ler_json` carrega o objeto e valida tipos e intervalo etário.
 
 ## Fluxo e decisões
 
@@ -21,3 +21,4 @@ A saída padrão dos exercícios CSV/JSON é resolvida em relação a `Path(__fi
 
 - v1.0: scripts de exemplo baseados em caminhos relativos ao processo, sem testes funcionais.
 - v1.1: funções reutilizáveis, caminho estável, validação de arquivos, CLIs parametrizáveis e testes comportamentais.
+- v1.1.1: a escrita JSON preserva o arquivo anterior em caso de falha antes da substituição.

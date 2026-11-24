@@ -15,3 +15,9 @@ MAJOR para quebra de contrato, MINOR para novas funcionalidades/casos, PATCH par
 ## Reconciliação documental de 14/11/2026
 
 Especificações e UML históricas migradas para a `main` atual com aviso de escopo, sem substituir testes, arquitetura ou código posteriores. O CI vigente continua sendo a fonte de evidência funcional.
+
+## Escrita JSON · 24/11/2026
+
+- [Arquitetura 1.1.1](../ARQUITETURA.md) descreve a substituição do destino após uma gravação completa.
+- [Plano de testes 1.2.0](../PLANO_TESTES.md) acrescenta JSON-03 e JSON-04 para preservação do destino e limpeza de temporários.
+- Código validado em `952bd57bd898096568b3e22e0c861de6728a6770`. Python 3.11.9 executou `python -m unittest discover -s tests -p 'test_*.py' -v` com 17 testes aprovados e `python -m compileall -q 1 2 3 4 tests` sem erros.

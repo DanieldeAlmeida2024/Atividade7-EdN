@@ -31,7 +31,7 @@ python 4/manipular_json.py --arquivo ./tmp/pessoa.json
 | `1/analise_logs.py` | Extrai tempos `Execution Time: Xs`, calcula média e desvio-padrão **amostral** | Um único tempo retorna desvio 0; ausência de tempos é erro explícito |
 | `2/escrever_csv.py` | Escreve nomes fictícios, idades e cidades em CSV UTF-8 | Cria diretório destino e preserva acentos |
 | `3/ler_csv.py` | Lê CSV com `Nome,Idade,Cidade` | Rejeita cabeçalhos inesperados, idades inválidas e linhas incompletas |
-| `4/manipular_json.py` | Grava e relê JSON de uma pessoa fictícia | Valida estrutura, tipos, idade e Unicode |
+| `4/manipular_json.py` | Grava e relê JSON de uma pessoa fictícia | Valida estrutura, tipos, idade e Unicode na leitura, e preserva o destino se a gravação falhar |
 
 ## Testes reais
 
